@@ -1,0 +1,28 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t brivad/react-test -f ./client/Dockerfile.dev ./client
+  # - docker build -t brivad/myotherproject -f ./myotherproject/Dockerfile.dev ./myotherproject
+
+# se uno degli script ritorna con stato errore, travis considera il build failed
+scripts:
+  # --coverage passato a jest essenzialmente fa terminare i test (jest di default rimane in watch mode)
+  - docker run brivad/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t brivad/multi-client ./client
+  - docker build -t brivad/multi-nginx ./nginx
+  - docker build -t brivad/multi-server ./server
+  - docker build -t brivad/multi-worker ./worker
+  # Login to the docker CLI
+  # su travis-ci.org aggiungiamo env vars contenenti username e passsword di dockerhub
+  # singolo comando che fa il login tramite docker-cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  # push images to dockerhub
+  - docker push -brivad/multi-client
+  - docker push -brivad/multi-nginx
+  - docker push -brivad/multi-server
+  - docker push -brivad/multi-worker

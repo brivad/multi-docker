@@ -7,7 +7,7 @@ before_install:
   # - docker build -t brivad/myotherproject -f ./myotherproject/Dockerfile.dev ./myotherproject
 
 # se uno degli script ritorna con stato errore, travis considera il build failed
-scripts:
+script:
   - docker run brivad/react-test npm test -- --coverage
   # --coverage passato a jest essenzialmente fa terminare i test (jest di default rimane in watch mode)
 

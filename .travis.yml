@@ -22,7 +22,7 @@ after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
   # push images to dockerhub
-  - docker push -brivad/multi-client
-  - docker push -brivad/multi-nginx
-  - docker push -brivad/multi-server
-  - docker push -brivad/multi-worker
+  - docker push brivad/multi-client
+  - docker push brivad/multi-nginx
+  - docker push brivad/multi-server
+  - docker push brivad/multi-worker
